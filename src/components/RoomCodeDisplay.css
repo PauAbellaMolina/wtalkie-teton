@@ -1,0 +1,17 @@
+.room-code-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.room-code-container span:not(.status-text) {
+  display: inline-block;
+  width: 45px;
+}
+
+.room-code-container .status-text {
+  font-style: italic;
+  opacity: 0.5;
+}

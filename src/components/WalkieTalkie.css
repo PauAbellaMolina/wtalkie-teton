@@ -5,19 +5,40 @@ h1 {
 .walkie-talkie {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 5rem;
+  min-height: 90dvh;
+  width: 90dvw;
+  max-width: 400px;
 }
 
-.walkie-talkie input {
-  padding: 0.5rem;
-  font-size: 1.2rem;
-  width: 175px;
-  text-align: center;
-  background-color: #1e1e1e;
-  border: 1px solid white;
-  border-radius: 8px;
+.walkie-talkie-decorator-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.walkie-talkie-decorator-container span:first-child {
+  font-weight: bold;
+  font-size: 1.04rem;
+}
+.walkie-talkie-decorator-container span:last-child {
+  font-style: italic;
+}
+
+.walkie-talkie-keypad-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.walkie-talkie-keypad-container .push-to-talk-button {
+  padding: 2rem;
 }
 
 .walkie-talkie button {
@@ -28,31 +49,21 @@ h1 {
   border: 1px solid white;
   color: #1e1e1e;
   border-radius: 12px;
-  transition: background-color 0.2s;
+  transition: background-color 0.18s;
+  box-shadow: 1px 1px 5px 1px rgb(0, 0, 0, .8);
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
 }
-
 .walkie-talkie button:disabled {
   opacity: 0.7;
+  cursor: not-allowed;
 }
-
-.walkie-talkie button.push-to-talk-button:active {
+.walkie-talkie button:active:not(:disabled) {
   background-color: #1e1e1e;
   color: white;
   border: 1px solid #d4d4d4;
-}
-
-.walkie-talkie-unconnected-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-.walkie-talkie-unconnected-input-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
 }
 
 .walkie-talkie-connected-container {
@@ -69,35 +80,32 @@ h1 {
   gap: .6rem;
 }
 
-.walkie-talkie-connected-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-.walkie-talkie-connected-button-container button {
-  width: 100%;
-}
-
-.push-to-talk-button {
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: pointer;
-}
-
 @media (prefers-color-scheme: light) {
-  .walkie-talkie input {
+  .walkie-talkie {
+    background-color: #f0f0f0;
+  }
+  .walkie-talkie button {
     background-color: #f9f9f9;
     color: #1e1e1e;
     border: 1px solid #1e1e1e;
+    box-shadow: 1px 1px 2px 0 rgba(73, 73, 73, 0.5);
   }
-  .walkie-talkie button {
+  .walkie-talkie button:active:not(:disabled) {
     background-color: #1e1e1e;
     color: white;
   }
-  .walkie-talkie button.push-to-talk-button:active {
-    background-color: #f9f9f9;
-    color: #1e1e1e;
-    border: 1px solid #1e1e1e;
+}
+
+@media (min-width: 576px) {
+  .walkie-talkie {
+    background-color: #1e1e1e;
+    padding: 28px 35px 35px;
+    border-radius: 47px;
+  }
+}
+
+@media (min-width: 576px) and (prefers-color-scheme: light) {
+  .walkie-talkie {
+    background-color: #f0f0f0;
   }
 }

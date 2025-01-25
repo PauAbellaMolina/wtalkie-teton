@@ -4,10 +4,14 @@ import { MediaConnection, Peer } from 'peerjs';
 import { useMount } from 'react-use';
 import { SupabasePresenceState, UserStatus } from '../../types/index.ts';
 import { supabase } from '../../supabase';
+import WalkieTalkieKeypad from './WalkieTalkieKeypad.tsx';
+import RoomCodeDisplay from './RoomCodeDisplay.tsx';
+import { audioService } from '../services/audioService.ts';
 
 const WalkieTalkie = () => {
   const [roomCode, setRoomCode] = useState<string>('');
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [peersCount, setPeersCount] = useState<number>(0);
   const [isTalking, setIsTalking] = useState<boolean>(false);
   const peerRef = useRef<Peer | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -69,6 +73,8 @@ const WalkieTalkie = () => {
 
   const joinRoom = () => {
     sbRtChannelRef.current = supabase.channel(`${roomCode}`);
+    audioService.play('join');
+    setIsConnected(true);
     
     const userStatus: UserStatus = {
       peer_id: peerId,
@@ -84,6 +90,7 @@ const WalkieTalkie = () => {
       );
       if (shouldConnect) {
         connectToPeers(newState);
+        setPeersCount(newStateValues.length - 1);
       }
     })
     //TODO PAU use join and leave to remove peers after the initial sync to improve connection performance
@@ -97,8 +104,6 @@ const WalkieTalkie = () => {
       if (status !== 'SUBSCRIBED') { return }
       await sbRtChannelRef.current.track(userStatus)
     });
-    
-    setIsConnected(true);
   };
 
   const connectToPeers = (newState: SupabasePresenceState) => {
@@ -160,6 +165,7 @@ const WalkieTalkie = () => {
     if (!streamRef.current) {
       return;
     }
+    audioService.play('over');
     setIsTalking(false);
     const audioTracks = streamRef.current.getAudioTracks();
     if (audioTracks.length <= 0) {
@@ -186,7 +192,7 @@ const WalkieTalkie = () => {
   };
 
   const onNewRadioFrequency = () => {
-    setRoomCode('');
+    audioService.play('leave');
     setIsConnected(false);
     setIsTalking(false);
     remoteAudioRefs.current = {};
@@ -200,46 +206,34 @@ const WalkieTalkie = () => {
       callsRef.current.forEach(call => call.close());
       callsRef.current = [];
     }
-
   };
 
   return (
     <div className="walkie-talkie">
-      {!isConnected ?
-        <div className="walkie-talkie-unconnected-container">
-          <h1>W.Talkie Teton</h1>
-          <div className="walkie-talkie-unconnected-input-container">
-            <input
-              type="text"
-              maxLength={4}
-              pattern="\d*"
-              value={roomCode}
-              onChange={(e) => setRoomCode(e.target.value.replace(/\D/g, ''))}
-              placeholder="Enter 4-digit code"
-            />
-            <button disabled={roomCode.length !== 4} onClick={joinRoom}>Join frequency</button>
-          </div>
-        </div>
-      :
-        <div className="walkie-talkie-connected-container">
-          <div className="walkie-talkie-connected-title-container">
-            <h1>Radio frequency</h1>
-            <h1>{roomCode}</h1>
-          </div>
-          <div className="walkie-talkie-connected-button-container">
-            <button
-              className="push-to-talk-button"
-              onMouseDown={onStartTalking}
-              onMouseUp={onStopTalking}
-              onPointerDown={onStartTalking}
-              onPointerUp={onStopTalking}
-            >
-              {isTalking ? 'Release to stop' : 'Push to talk'}
-            </button>
-            <button onClick={onNewRadioFrequency}>New radio frequency</button>
-          </div>
-        </div>
-      }
+      <div className="walkie-talkie-decorator-container">
+        <span>W. Talkie®</span>
+        <span>for Teton by Pau</span>
+      </div>
+      <RoomCodeDisplay roomCode={roomCode} isConnected={isConnected} peersCount={peersCount} />
+      <div className="walkie-talkie-keypad-container">
+        <WalkieTalkieKeypad
+          value={roomCode}
+          onChange={(e) => setRoomCode(e.target.value.replace(/\D/g, ''))}
+          maxLength={4}
+          onReachedLength={joinRoom}
+          onUndoReachedLength={onNewRadioFrequency}
+        />
+        <button
+          disabled={!isConnected}
+          className="push-to-talk-button"
+          onMouseDown={onStartTalking}
+          onMouseUp={onStopTalking}
+          onPointerDown={onStartTalking}
+          onPointerUp={onStopTalking}
+        >
+          {isTalking ? 'Release to stop' : 'Push to talk'}
+        </button>
+      </div>
     </div>
   );
 };
