@@ -30,27 +30,27 @@ const WalkieTalkie = () => {
             },
             {
               urls: "turn:global.relay.metered.ca:80",
-              username: "27c2825aa6fddf47876b3601",
-              credential: "elPk/ZrKyt3adcxg",
+              username: import.meta.env.VITE_METERED_TURN_USERNAME,
+              credential: import.meta.env.VITE_METERED_CREDENTIAL
             },
             {
               urls: "turn:global.relay.metered.ca:80?transport=tcp",
-              username: "27c2825aa6fddf47876b3601",
-              credential: "elPk/ZrKyt3adcxg",
+              username: import.meta.env.VITE_METERED_TURN_USERNAME,
+              credential: import.meta.env.VITE_METERED_CREDENTIAL
             },
             {
               urls: "turn:global.relay.metered.ca:443",
-              username: "27c2825aa6fddf47876b3601",
-              credential: "elPk/ZrKyt3adcxg",
+              username: import.meta.env.VITE_METERED_TURN_USERNAME,
+              credential: import.meta.env.VITE_METERED_CREDENTIAL
             },
             {
               urls: "turns:global.relay.metered.ca:443?transport=tcp",
-              username: "27c2825aa6fddf47876b3601",
-              credential: "elPk/ZrKyt3adcxg",
-            },
-        ]
-      }
-    });
+              username: import.meta.env.VITE_METERED_TURN_USERNAME,
+              credential: import.meta.env.VITE_METERED_CREDENTIAL
+            }
+          ]
+        }
+      });
 
       peerRef.current.on('open', (id: string) => {
         setPeerId(id);
