@@ -22,7 +22,35 @@ const WalkieTalkie = () => {
 
   useMount(() => {
     if (!peerRef.current) {
-      peerRef.current = new Peer();
+      peerRef.current = new Peer({
+        config: {
+          iceServers: [
+            {
+              urls: "stun:stun.relay.metered.ca:80",
+            },
+            {
+              urls: "turn:global.relay.metered.ca:80",
+              username: "27c2825aa6fddf47876b3601",
+              credential: "elPk/ZrKyt3adcxg",
+            },
+            {
+              urls: "turn:global.relay.metered.ca:80?transport=tcp",
+              username: "27c2825aa6fddf47876b3601",
+              credential: "elPk/ZrKyt3adcxg",
+            },
+            {
+              urls: "turn:global.relay.metered.ca:443",
+              username: "27c2825aa6fddf47876b3601",
+              credential: "elPk/ZrKyt3adcxg",
+            },
+            {
+              urls: "turns:global.relay.metered.ca:443?transport=tcp",
+              username: "27c2825aa6fddf47876b3601",
+              credential: "elPk/ZrKyt3adcxg",
+            },
+        ]
+      }
+    });
 
       peerRef.current.on('open', (id: string) => {
         setPeerId(id);
