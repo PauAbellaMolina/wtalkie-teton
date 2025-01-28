@@ -254,8 +254,6 @@ const WalkieTalkie = () => {
         <button
           disabled={!isConnected}
           className="push-to-talk-button"
-          onMouseDown={onStartTalking}
-          onMouseUp={onStopTalking}
           onPointerDown={onStartTalking}
           onPointerUp={onStopTalking}
         >
